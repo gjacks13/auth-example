@@ -99,6 +99,7 @@ const Home = () => {
                 ? 'This is your application on Auth'
                 : 'This is your application not on Auth'}
             </Heading>
+            <Divider />
             <Heading as="h4" size="sm">
               Current Scopes:
             </Heading>
