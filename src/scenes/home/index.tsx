@@ -12,11 +12,12 @@ const Home = () => {
     { MoodID: 2, Name: '2' },
   ]);
   const [currentMood, setMood] = useState<Mood>();
-  const [token, setToken] = useState<any>(); // never set token in state
-  const [scopes, setScopes] = useState<any>();
+  const [scopes, setScopes] = useState<string[]>([]);
   const [user, setUser] = useState<any>();
 
   const toast = useToast();
+
+  const hasWriteScope = scopes && scopes.length > 0 && scopes.includes('write:all') ? true : false;
 
   const handleOnSubmit = async (moodId: number) => {
     const token = await getAccessTokenSilently();
@@ -35,7 +36,7 @@ const Home = () => {
     } catch (e) {
       toast({
         title: 'Mood Update',
-        description: 'Failed to update vendor your mood.',
+        description: 'Failed to update your mood.',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -48,7 +49,6 @@ const Home = () => {
     (async () => {
       try {
         const token = await getAccessTokenSilently();
-        setToken(token);
 
         let moods = await CallApi('GET', '/moods', token);
         setOptions(moods);
@@ -70,17 +70,17 @@ const Home = () => {
 
   return (
     <Box w="100%">
-      <Heading as="h1" size="lg" margin="20px 0px 20px 20px">
-        Select Your Mood
-      </Heading>
-
-      <SimpleGrid width="100%">
+      <SimpleGrid width="50%" margin="auto">
+        <Heading as="h1" size="lg" margin="20px 0px 20px 0">
+          Select Your Mood
+        </Heading>
         <Skeleton isLoaded={!isLoading}>
           <Select
             placeholder="Select your new mood"
             onChange={element => {
               handleOnSubmit(parseInt(element.target.value));
             }}
+            isDisabled={!hasWriteScope}
           >
             {moods.map((moodObj: Mood) => (
               <option
@@ -93,21 +93,25 @@ const Home = () => {
             ))}
           </Select>
           <Divider />
-          <Box>
-            <Heading as="h1">
+          <Box textAlign="center">
+            <Heading as="h3" size="md">
               {isAuthenticated
                 ? 'This is your application on Auth'
                 : 'This is your application not on Auth'}
             </Heading>
-            <Heading as="h3">Current Scopes:</Heading>
+            <Heading as="h4" size="sm">
+              Current Scopes:
+            </Heading>
             {scopes ? (
               scopes.map((scope: string, index: number) => (
-                <Heading key={index} as="h4">
+                <Heading key={index} as="h5" size="xs">
                   {scope}
                 </Heading>
               ))
             ) : (
-              <Heading as="h4">No Scopes Detected</Heading>
+              <Heading as="h5" size="xs">
+                No Scopes Detected
+              </Heading>
             )}
           </Box>
         </Skeleton>

@@ -12,8 +12,8 @@ function App() {
       <NavBar></NavBar>
       <Grid>
         <Switch>
+          <Route path="/unprotected" component={Unprotected} />
           <PrivateRoute path="/" component={Home} />
-          <Route path="/vendors" component={Unprotected} />
         </Switch>
       </Grid>
     </Box>
