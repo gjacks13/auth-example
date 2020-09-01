@@ -11,16 +11,9 @@ import * as serviceWorker from './serviceWorker';
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <Auth0Provider
-        domain={config.domain}
-        audience={config.resource}
-        clientId={config.clientId}
-        redirectUri={`${window.location.origin}/login`}
-      >
-        <CustomThemeProvider>
-          <App />
-        </CustomThemeProvider>
-      </Auth0Provider>
+      <CustomThemeProvider>
+        <App />
+      </CustomThemeProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

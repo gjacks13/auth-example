@@ -13,7 +13,7 @@ function App() {
       <Grid>
         <Switch>
           <Route path="/unprotected" component={Unprotected} />
-          <PrivateRoute path="/" component={Home} />
+          <Route path="/" component={Home} />
         </Switch>
       </Grid>
     </Box>

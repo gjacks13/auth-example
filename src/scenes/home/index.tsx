@@ -6,7 +6,6 @@ import { Mood } from '../../types/Mood';
 import { CallApi } from '../../util/requestWrapper';
 
 const Home = () => {
-  const { getAccessTokenSilently, isLoading, isAuthenticated } = useAuth0();
   const [moods, setOptions] = useState<Mood[]>([]);
   const [currentMood, setMood] = useState<Mood>();
   const [scopes, setScopes] = useState<string[]>([]);
@@ -17,57 +16,16 @@ const Home = () => {
   const hasWriteScope =
     scopes && scopes.length > 0 && scopes.includes('write:user:mood') ? true : false;
 
-  const handleOnSubmit = async (moodUpdate: Mood) => {
-    const token = await getAccessTokenSilently();
-
-    try {
-      // update mood
-      await CallApi('PUT', `/api/users/${user}/mood`, token, moodUpdate);
-      toast({
-        title: 'Mood Update',
-        description: 'Successfully updated your Mood!',
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-        position: 'bottom-right',
-      });
-    } catch (e) {
-      toast({
-        title: 'Mood Update',
-        description: 'Failed to update your mood.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-        position: 'bottom-right',
-      });
-    }
-  };
+  const handleOnSubmit = async (moodUpdate: Mood) => {};
 
   useEffect(() => {
     (async () => {
       try {
-        const token = await getAccessTokenSilently();
-
-        let moods = await CallApi('GET', '/api/moods', token);
-        setOptions(moods);
-
-        const decodedToken: any = jwt.decode(token);
-        const scopes = decodedToken.permissions || [];
-        setScopes(scopes);
-
-        // const userEmail = decodedToken['https://meta/email'];
-        const userID = decodedToken['https://meta/userId'];
-        setUser(userID);
-
-        let currentMood = await CallApi('GET', `/api/users/${userID}/mood`, token);
-        if (currentMood) {
-          setMood(currentMood);
-        }
       } catch (e) {
         console.log(e);
       }
     })();
-  }, [getAccessTokenSilently]);
+  }, []);
 
   return (
     <Box w="100%">
@@ -75,7 +33,7 @@ const Home = () => {
         <Heading as="h1" size="lg" margin="20px 0px 20px 0">
           Select Your Mood
         </Heading>
-        <Skeleton isLoaded={!isLoading}>
+        <Skeleton isLoaded={true}>
           <Select
             placeholder="Select your new mood"
             onChange={element => {
@@ -100,9 +58,7 @@ const Home = () => {
           <Divider />
           <Box textAlign="center">
             <Heading as="h3" size="md">
-              {isAuthenticated
-                ? 'This is your application on Auth'
-                : 'This is your application not on Auth'}
+              This is your application on Auth
             </Heading>
             <Divider />
             <Heading as="h4" size="sm">
